@@ -50,8 +50,11 @@ def main(page: ft.Page):
     fecha_evento = ft.Text("Fecha no seleccionada")
 
     def cambiar_fecha(e):
-        fecha = e.control.value
-        fecha_evento.value = f"Fecha seleccionada: {fecha.strftime('%d/%m/%Y')}"
+        fecha = date_picker.value
+        if fecha:
+            fecha_evento.value = f"Fecha seleccionada: {fecha.strftime('%d/%m/%Y')}"
+        else:
+            fecha_evento.value = "Fecha no seleccionada"
         page.update()
 
     date_picker = ft.DatePicker(
@@ -60,9 +63,9 @@ def main(page: ft.Page):
 
     page.overlay.append(date_picker)
 
-    boton_fecha = ft.ElevatedButton(
-        text="Seleccionar fecha",
-        on_click=lambda e: date_picker.pick_date()
+    boton_fecha = ft.Button(
+    content=ft.Text("Seleccionar fecha"),
+    on_click=lambda e: date_picker.pick_date()
     )
 
     resumen = ft.Text(
@@ -74,7 +77,7 @@ def main(page: ft.Page):
 
     def mostrar_resumen(e):
         if nombre_evento.value.strip() == "":
-            resumen.value = "❌ Error: El nombre del evento no puede estar vacío."
+            resumen.value = "Error: El nombre del evento no puede estar vacío."
             resumen.color = "red"
         else:
             resumen.value = f"""
@@ -89,16 +92,12 @@ Duración: {int(duracion.value)} horas
 
         page.update()
 
-    boton_resumen = ft.ElevatedButton(
-        text="Mostrar resumen",
-        on_click=mostrar_resumen,
-        bgcolor="blue",
-        color="white"
+    boton_resumen = ft.Button(
+    content=ft.Text("Mostrar resumen", color="white"),
+    bgcolor="blue",
+    on_click=mostrar_resumen
     )
 
-    # -----------------------------
-    # Layout Principal
-    # -----------------------------
     page.add(
         ft.Column(
             controls=[
@@ -120,4 +119,4 @@ Duración: {int(duracion.value)} horas
         )
     )
 
-ft.app(target=main)
+ft.app(main)
