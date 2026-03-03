@@ -82,20 +82,44 @@ def main(page: ft.Page):
     )
 
     def mostrar_resumen(e):
-        if nombre_evento.value.strip() == "":
-            resumen.value = "Error: El nombre del evento no puede estar vacío."
-            resumen.color = "red"
-        else:
-            resumen.value = f"""Nombre: {nombre_evento.value}
+        errores = False
+
+    if not nombre_evento.value.strip():
+        nombre_evento.error_text = "Este campo es obligatorio"
+        errores = True
+    else:
+        nombre_evento.error_text = None
+
+    if not tipo_evento.value:
+        tipo_evento.error_text = "Selecciona un tipo de evento"
+        errores = True
+    else:
+        tipo_evento.error_text = None
+
+    if not modalidad.value:
+        errores = True
+
+    if not date_picker.value:
+        fecha_evento.value = " Debes seleccionar una fecha"
+        fecha_evento.color = "red"
+        errores = True
+    else:
+        fecha_evento.color = "black"
+
+    if errores:
+        resumen.value = "Corrige los campos marcados."
+        resumen.color = "red"
+    else:
+        resumen.value = f"""Nombre: {nombre_evento.value}
 Tipo: {tipo_evento.value}
 Modalidad: {modalidad.value}
 Requiere inscripción: {"Sí" if requiere_inscripcion.value else "No"}
 Duración: {int(duracion.value)} horas
-{fecha_evento.value}
+Fecha: {date_picker.value.strftime('%d/%m/%Y')}
 """
-            resumen.color = "green"
+        resumen.color = "green"
 
-        page.update()
+    page.update()
 
     boton_resumen = ft.Button(
         content=ft.Text("Mostrar resumen", color="white"),
