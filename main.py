@@ -1,5 +1,5 @@
 import flet as ft
-from datetime import datetime
+import datetime
 
 def main(page: ft.Page):
     page.title = "Registro de Eventos"
@@ -58,14 +58,20 @@ def main(page: ft.Page):
         page.update()
 
     date_picker = ft.DatePicker(
+        first_date=datetime.date.today(),
+        last_date=datetime.date(2100, 12, 31),
         on_change=cambiar_fecha
     )
 
     page.overlay.append(date_picker)
 
+    def abrir_datepicker(e):
+        date_picker.open = True
+        page.update()
+
     boton_fecha = ft.Button(
-    content=ft.Text("Seleccionar fecha"),
-    on_click=lambda e: date_picker.pick_date()
+        content=ft.Text("Seleccionar fecha"),
+        on_click=abrir_datepicker
     )
 
     resumen = ft.Text(
@@ -80,8 +86,7 @@ def main(page: ft.Page):
             resumen.value = "Error: El nombre del evento no puede estar vacío."
             resumen.color = "red"
         else:
-            resumen.value = f"""
-Nombre: {nombre_evento.value}
+            resumen.value = f"""Nombre: {nombre_evento.value}
 Tipo: {tipo_evento.value}
 Modalidad: {modalidad.value}
 Requiere inscripción: {"Sí" if requiere_inscripcion.value else "No"}
@@ -93,9 +98,9 @@ Duración: {int(duracion.value)} horas
         page.update()
 
     boton_resumen = ft.Button(
-    content=ft.Text("Mostrar resumen", color="white"),
-    bgcolor="blue",
-    on_click=mostrar_resumen
+        content=ft.Text("Mostrar resumen", color="white"),
+        bgcolor="blue",
+        on_click=mostrar_resumen
     )
 
     page.add(
@@ -119,4 +124,4 @@ Duración: {int(duracion.value)} horas
         )
     )
 
-ft.app(main)
+ft.app(target=main)
